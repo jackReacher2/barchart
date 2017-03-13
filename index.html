@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>BarChart</title>
+		
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">			
+		<!-- D3.js and Bootstrap CSS libraries -->
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+		<!-- Importing Google fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600%7COswald" rel="stylesheet">
+		<style>
+			.title {
+				padding-top: 10px;
+				font-family: "Oswald", sans-serif;
+			}
+
+			.subtitle {
+				font-family: "Open Sans", sans-serif;
+				margin-top: 10px;
+			}
+			
+			.bar:hover {
+  				fill: blue;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row justify-content-md-center">
+				<div class="col-12 col-md-auto">
+					<div id="myID"></div>
+				</div>
+			</div>
+		</div>
+		<script>
+			
+			function makeGraph(element, dataset) {
+
+				var margin = {top: 20, right: 20, bottom: 100, left: 40},
+					width = 900 - margin.left - margin.right,
+					height = 600 - margin.top - margin.bottom;
+
+				// set the ranges
+				var x = d3.scaleLinear()
+						.domain([0, 1])
+						.range([0, width]);
+				
+				var y = d3.scaleLinear()
+						.domain([0, d3.max(dataset, function(d) { return d; })])
+						.range([height, 0]);
+
+				var svg = d3.select(element).append("svg")
+					.attr("width", width + margin.left + margin.right)
+					.attr("height", height + margin.top + margin.bottom)
+				  	.append("g")
+					.attr("transform", 
+						  "translate(" + margin.left + "," + margin.top + ")");
+				
+				  // append the rectangles for the bar chart
+				  svg.selectAll(".bar")
+					  .data(dataset)
+					.enter().append("rect")
+					  .attr("class", "bar")
+					  .attr("x", function(d, i) { return x(i) - 0.5; })
+					  .attr("width", 20)
+					  .attr("y", function(d) { return y(d); })
+					  .attr("height", function(d) { return height - y(d); })
+				  		.attr("fill", "teal").attr("opacity", 0.5);
+
+				  // add the x Axis
+				  svg.append("g")
+					  .attr("transform", "translate(0," + height + ")")
+					  .call(d3.axisBottom(x))
+				  		.selectAll("text")
+						  .style("text-anchor", "end")
+						  .attr("dx", "-.8em")
+						  .attr("dy", "-.55em")
+						  .attr("transform", "rotate(-90)" );
+
+				  // add the y Axis
+				  svg.append("g")
+					  .call(d3.axisLeft(y));
+				
+				
+			}
+			
+			// Change the array here
+			makeGraph("#myID", [10, 20, 50, 30, 15]);			
+			
+		</script>
+		
+		<!-- jQuery and Bootstrap libraries -->	
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>		
+	</body>
+</html>
